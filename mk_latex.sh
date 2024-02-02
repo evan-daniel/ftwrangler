@@ -10,7 +10,7 @@ fi
 
 # DIRECTORY TO CONVERT TO 
 
-dn_tex=$(echo "${1%/}" | sed -E "s|^[^/]+|3.frags|"); 
+dn_tex=$(echo "${1%/}" | sed -E "s|^[^/]+|fragments|"); 
 rm -r "${dn_tex}"; 
 mkdir -p "${dn_tex}"; 
 

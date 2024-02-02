@@ -1,5 +1,14 @@
 #! /bin/zsh 
 
+# JSONL LINE TEMPLATE 
+
+declare -a TEMPLATE=('{"messages":[{"role":"system","content":' '},{"role":"user","content":"' '"},{"role":"assistant","content":' '}]}' )
+
+# SETTINGS 
+
+system_content=$(jq '.default_system_content' 'ftsettings.json'); 
+echo "USING SYSTEM CONTENT: ${system_content}…"; 
+
 # DIRECTORY TO CONVERT 
 
 if [[ ! -d "${1}" ]]; then 
@@ -9,14 +18,10 @@ if [[ ! -d "${1}" ]]; then
 fi 
 src_dir="${1%/}"; 
 
-# JSONL LINE TEMPLATE 
-
-declare -a TEMPLATE=('{"messages":[{"role":"system","content":""},{"role":"user","content":"' '"},{"role":"assistant","content":' '}]}' )
-
 # OUT FILE 
 
 out_file=$(echo "${1%/}" | grep -Eo "[^/]+$"); 
-out_file="4.jsonl/${out_file}.jsonl"; 
+out_file="training/${out_file}.jsonl"; 
 echo "" > "${out_file}"; 
 
 # ITERATE OVER FILES 
@@ -36,5 +41,5 @@ for f in "${src_dir}"/*.tex; do
     # APPEND TO OUT FILE 
 
     echo "PREPARING: ${usr_content}…"; 
-    echo "${TEMPLATE[1]}${usr_content}${TEMPLATE[2]}${asst_content}${TEMPLATE[3]}" >> "${out_file}"; 
+    echo "${TEMPLATE[1]}${system_content}${TEMPLATE[2]}${usr_content}${TEMPLATE[3]}${asst_content}${TEMPLATE[4]}" >> "${out_file}"; 
 done 
